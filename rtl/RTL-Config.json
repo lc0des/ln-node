@@ -1,0 +1,30 @@
+{
+  "multiPass": "allesguthiersir.",
+  "port": "3001",
+  "defaultNodeIndex": 1,
+  "SSO": {
+    "rtlSSO": 0,
+    "rtlCookiePath": "",
+    "logoutRedirectLink": ""
+  },
+  "nodes": [
+    {
+      "index": 1,
+      "lnNode": "Node 1",
+      "lnImplementation": "LND",
+      "Authentication": {
+        "macaroonPath": "/data/lnd/",
+        "configPath": "/data/lnd/lnd.conf"
+      },
+      "Settings": {
+        "userPersona": "MERCHANT",
+        "themeMode": "DAY",
+        "themeColor": "PURPLE",
+        "channelBackupPath": "/data/lnd/",
+        "enableLogging": true,
+        "lnServerUrl": "https://172.20.0.3:8080",
+        "fiatConversion": false
+      }
+    }
+  ]
+}
