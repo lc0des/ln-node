@@ -1,0 +1,6 @@
+# Torrc Example for lcodes Container Setup
+
+SocksPort   172.20.0.5:9050
+ControlPort 172.20.0.5:29051
+
+HashedControlPassword 16:E74F5BF7764A8B6A604B56B1529CB0A4B5A2FA42626B82D69BE763DC63
