@@ -45,13 +45,6 @@ function prepare_system {
 #apt-get update -y && apt-get upgrade -y
 #apt-get install git wget curl screen tmux docker docker.io htop -y
 
-# First lets get the repository
-git clone https://github.com/lc0des/$repository
-
-# save current working directory
-cwd=`pwd`
-cd $repository
-
 # create my new home
 mkdir -p $workdir
 }
