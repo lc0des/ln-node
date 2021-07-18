@@ -1,12 +1,12 @@
 # Torrc Example for lcodes Container Setup
-
+#
 SocksPort   172.20.0.5:9050
 ControlPort 172.20.0.5:29051
 
-HiddenServiceDir /var/lib/tor/lcodes-bitcoind/
+HiddenServiceDir /app/data/lcodes-bitcoind/
 HiddenServicePort 8333 172.20.0.2:8333
 
-HiddenServiceDir /var/lib/tor/lcodes-lnd/
+HiddenServiceDir /app/data/lcodes-lnd/
 HiddenServicePort 9735 172.20.0.3:9735
 
-HashedControlPassword 16:E74F5BF7764A8B6A604B56B1529CB0A4B5A2FA42626B82D69BE763DC64
+HashedControlPassword 16:E74F5BF7764A8B6A604B56B1529CB0A4B5A2FA42627882F69BE763DC64
