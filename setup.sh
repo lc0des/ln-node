@@ -18,7 +18,8 @@ lnd_home="$workdir/lnd/"
 rtl_home="$workdir/rtl/"
 th_home="$workdir/th/"
 tor_home="$workdir/tor/"
-DESCLOG="DESC.txt"
+logs_home="$workdir/logs/"
+DESCLOG="$logs_home/setup.log"
 
 function usage {
 echo 'Wrapper Script for lcodes Lightning Node Server Setup'
@@ -150,7 +151,7 @@ docker build . -t lcodes-th
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$th_home --opt o=bind $dc-vol-th
 
 # run the container
-docker run  -d --restart=always --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ $dc-th
+docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ $dc-th
 cd ..
 }
 
