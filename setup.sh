@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 userhome="/home/ln-node"
 repository="ln-node"
 dc="lcodes"
@@ -44,12 +45,12 @@ function setup_daemon_config {
 	gen_user=`cat /dev/urandom | xxd -l 10 -p -u`
 	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u`
 	rpc_entry=`python ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
-	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" bitcoind/bitcoin.conf
+	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" ../bitcoind/bitcoin.conf
 
 	lnd_user=`echo $rpc_entry|cut -d ':' -f1`
 	lnd_pass=`echo $rpc_entry|cut -d ':' -f2`
-	sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" lnd/lnd.conf
-	sed -i "s/REPLACEME_RPCPASSWORD_LND/$lnd_pass/" lnd/lnd.conf
+	sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" ../lnd/lnd.conf
+	sed -i "s/REPLACEME_RPCPASSWORD_LND/$lnd_pass/" ../lnd/lnd.conf
 
 }
 
