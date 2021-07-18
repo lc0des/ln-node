@@ -5,3 +5,6 @@ RUN apt-get install libevent-dev libboost-system-dev libboost-filesystem-dev lib
 RUN wget https://github.com/torproject/tor/archive/refs/tags/tor-0.4.6.6.tar.gz
 RUN tar xzvf tor-0.4.6.6.tar.gz; cd tor-tor-0.4.6.6/;ls -al;
 RUN cd tor-tor-0.4.6.6/;./autogen.sh;./configure --disable-asciidoc && make && make install;
+RUN mkdir /var/lib/tor/lcodes-bitcoind/
+RUN mkdir /var/lib/tor/lcodes-lnd/
+ENTRYPOINT ["tor"]

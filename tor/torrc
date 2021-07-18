@@ -3,4 +3,10 @@
 SocksPort   172.20.0.5:9050
 ControlPort 172.20.0.5:29051
 
-HashedControlPassword 16:E74F5BF7764A8B6A604B56B1529CB0A4B5A2FA42626B82D69BE763DC63
+HiddenServiceDir /var/lib/tor/lcodes-bitcoind/
+HiddenServicePort 8333 172.20.0.2:8333
+
+HiddenServiceDir /var/lib/tor/lcodes-lnd/
+HiddenServicePort 9735 172.20.0.3:9735
+
+HashedControlPassword 16:E74F5BF7764A8B6A604B56B1529CB0A4B5A2FA42626B82D69BE763DC64
