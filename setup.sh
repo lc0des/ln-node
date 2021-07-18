@@ -176,7 +176,6 @@ echo "LND Onion Addr: $tor_bitcoind" >> $DESCLOG
 
 # subsitate placeholde with ONION Address
 sed -i "s/REPLACEME_ONION_ADDR/$tor_bitcoind/" ../bitcoind/bitcoin.conf
-sleep 30
 
 # leaving directory
 cd ..
