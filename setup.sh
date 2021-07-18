@@ -47,6 +47,7 @@ function prepare_system {
 
 # create my new home
 mkdir -p $workdir
+mkdir -p $logs_home
 }
 
 # Building the network bridge  ############################
