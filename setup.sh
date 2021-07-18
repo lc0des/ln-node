@@ -18,6 +18,7 @@ lnd_home="$workdir/lnd/"
 rtl_home="$workdir/rtl/"
 th_home="$workdir/th/"
 tor_home="$workdir/tor/"
+DESCLOG="DESC.txt"
 
 function usage {
 echo 'Wrapper Script for lcodes Lightning Node Server Setup'
@@ -175,8 +176,15 @@ docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$tor_
 docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
 tor_bitcoind=`docker exec -ti lcodes-tor cat /app/data/lcodes-bitcoind/hostname`
 tor_lnd=`docker exec -ti lcodes-tor cat /app/data/lcodes-lnd/hostname`
-echo "Bitcoin Onion Addr: $tor_bitcoind"
-echo "LND Onion Addr: $tor_bitcoind"
+echo "Bitcoin Onion Addr: $tor_bitcoind" >> $DESCLOG
+echo "LND Onion Addr: $tor_bitcoind" >> $DESCLOG
+
+# subsitate placeholde with ONION Address
+sed -i "s/REPLACEME_ONION_ADDR/$tor_bitcoind/" ../bitcoind/bitcoin.conf
+sleep 30
+
+# leaving directory
+cd ..
 }
 
 # basic checks if all has worked
@@ -206,6 +214,7 @@ while getopts ${optstring} arg; do
 	build_lnd
    ;;
    a)
+	build_bridge
    	build_tor
 	build_bitcoind
 	build_lnd
