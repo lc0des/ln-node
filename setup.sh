@@ -39,6 +39,26 @@ if [ $# -lt 1 ];then
 	exit
 fi
 
+function setup_daemon_config {
+	cd $workdir/
+	gen_user=`cat /dev/urandom | xxd -l 10 -p -u`
+	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u`
+	rpc_entry=`python ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
+	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" bitcoind/bitcoin.conf
+
+	lnd_user=`echo $rpc_entry|cut -d ':' -f1`
+	lnd_pass=`echo $rpc_entry|cut -d ':' -f2`
+	sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" lnd/lnd.conf
+	sed -i "s/REPLACEME_RPCPASSWORD_LND/$lnd_pass/" lnd/lnd.conf
+
+}
+
+
+function setup_lnd_password {
+	echo "Creating LND Wallet, please enter Passphrase"
+	docker exec -ti lcodes-lnd lncli create
+	docker exec -ti lcodes-lnd lncli unlock
+}
 
 function prepare_system {
 # Check if we have all packets ready
@@ -70,6 +90,7 @@ echo "Building new bitcoin core docker..."
 mkdir -p $bitcoind_home
 
 cd bitcoind/
+
 #docker build -t $dc-bitcoind - < bitcoind/Dockerfile
 docker build . -t $dc-bitcoind
 cd ..
@@ -208,12 +229,14 @@ while getopts ${optstring} arg; do
 	build_lnd
    ;;
    a)
+    setup_daemon_config
 	build_bridge
    	build_tor
 	build_bitcoind
 	build_lnd
 	build_rtl
 	build_th
+	setup_lnd_password
    ;;
    h)
 	usage
