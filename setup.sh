@@ -45,12 +45,14 @@ function setup_daemon_config {
 	cd $workdir/
 	gen_user=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
 	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u -c 42|sed -r 's/\s+//g'`
-	rpc_entry=`python3 ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
+	rpc_entry=`python3 ../tools/rpcauth.py lnnode $gen_pass|grep rpcauth|cut -d '=' -f2`
+	#rpc_entry=`python3 ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
 	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" ../bitcoind/bitcoin.conf
 
 	lnd_user=`echo $rpc_entry|cut -d ':' -f1`
 	lnd_pass=`echo $rpc_entry|cut -d ':' -f2`
-	sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" ../lnd/lnd.conf
+	sed -i "s/REPLACEME_RPCUSER_LND/lnnode/" ../lnd/lnd.conf
+	#sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" ../lnd/lnd.conf
 	sed -i "s/REPLACEME_RPCPASSWORD_LND/$lnd_pass/" ../lnd/lnd.conf
 
 }
