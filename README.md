@@ -99,8 +99,14 @@ $ shred ln-node/data/logs/setup.log
 * add suez
 * add flag for password on screen output only 
 * configuration for tor only (no clearnet)
+* docker hardening
 * service hardening
 * server hardening links
+* config file for pre-install phase
+* several flags for custom prefs
 
 ## Disclaimer
-Run at your own RISK! I do not take any responsibility for you loosing any funds or alike. This software is provided AS-IS.
+
+Run at your own RISK!  
+
+I do not take any responsibility for you loosing any funds or alike. This software is provided AS-IS.
