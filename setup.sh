@@ -4,6 +4,7 @@ userhome="/home/ln-node"
 repository="ln-node"
 dc="lcodes"
 workdir="$userhome/$repository/data"
+repodir="$userhome/$repository/"
 dockergw="172.20.0.1"
 dockeripr="172.20.0.0/16"
 dockersub="172.20.0.0/24"
@@ -42,8 +43,8 @@ fi
 
 function setup_daemon_config {
 	cd $workdir/
-	gen_user=`cat /dev/urandom | xxd -l 10 -p -u`
-	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u`
+	gen_user=`cat /dev/urandom | xxd -l 10 -p -u -c 10`
+	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u -c 42`
 	rpc_entry=`python ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
 	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" ../bitcoind/bitcoin.conf
 
@@ -89,7 +90,7 @@ echo "Building new bitcoin core docker..."
 
 # create new bitcoin daemon home
 mkdir -p $bitcoind_home
-
+cd $repodir
 cd bitcoind/
 
 #docker build -t $dc-bitcoind - < bitcoind/Dockerfile
@@ -115,6 +116,7 @@ function build_lnd {
 # Create the lnd docker
 echo "Lets build our magic lnd docker...."
 mkdir -p $lnd_home
+cd $repodir
 cd lnd/
 docker build . -t $dc-lnd
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$lnd_home --opt o=bind $dc-vol-lnd
@@ -134,6 +136,7 @@ function build_rtl {
 # Create the RTL Container
 echo "Lets build the Ride the Lightning App Container ..."
 mkdir -p $rtl_home
+cd $repodir
 git clone https://github.com/Ride-The-Lightning/RTL -b v0.11.0
 cd rtl
 cp Dockerfile RTL-Config.json ../RTL/
@@ -153,6 +156,7 @@ function build_th {
 
 # Create the Thunderhub home
 mkdir -p $th_home
+cd $repodir
 
 # get data from github
 git clone https://github.com/apotdevin/thunderhub -b v0.12.21
@@ -179,6 +183,7 @@ cd ..
 function build_tor {
 # create new tor daemon home
 mkdir -p $tor_home
+cd $repodir
 
 # lets move into the directory
 cd tor
