@@ -69,7 +69,25 @@ function setup_daemon_config {
 	sed -i "s/REPLACEME_RTLPASSWORD/$gen_pass/" ../rtl/RTL-Config.json
 	echo "RTL Password: $gen_pass" >> $DESCLOG
 
+	# setup for th
+	#echo "Adding random password to rtl conf (RTL-Config.json)"
+	#gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
+	#sed -i "s/REPLACEME_RTLPASSWORD/$gen_pass/" ../rtl/RTL-Config.json
+	#echo "RTL Password: $gen_pass" >> $DESCLOG
 
+
+}
+
+function setup_th_config {
+	mac="admin.macaroon"
+	lnd="lnd.conf"
+	th_docker_path="/app/data/lnd/"
+	echo "Copying $mac and $lnd to $dc-vol-th $th_docker_path"
+	docker cp $dc-lnd:/app/.lnd/$lnd .
+	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
+	docker cp $lnd $dc-th:$th_docker_path
+	docker cp $mac $dc-th:$th_docker_path
+	docker restart $dc-th
 }
 
 function setup_rtl_config {
@@ -214,7 +232,7 @@ docker build . -t lcodes-th
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$th_home --opt o=bind $dc-vol-th
 
 # run the container
-docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ $dc-th
+docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ --env=ACCOUNT_CONFIG_PATH:/app/data/th.yaml $dc-th
 cd ..
 }
 
@@ -311,6 +329,7 @@ while getopts ${optstring} arg; do
 	build_th
 	setup_lnd_wallet
 	setup_rtl_config
+	setup_th_config
    ;;
    h)
 	usage
