@@ -50,7 +50,7 @@ function setup_daemon_config {
 	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" ../bitcoind/bitcoin.conf
 
 	lnd_user=`echo $rpc_entry|cut -d ':' -f1`
-	lnd_pass=`echo $rpc_entry|cut -d ':' -f2`
+	lnd_pass=$gen_pass
 	sed -i "s/REPLACEME_RPCUSER_LND/lnnode/" ../lnd/lnd.conf
 	#sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" ../lnd/lnd.conf
 	sed -i "s/REPLACEME_RPCPASSWORD_LND/$lnd_pass/" ../lnd/lnd.conf
