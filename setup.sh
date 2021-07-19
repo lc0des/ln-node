@@ -197,13 +197,14 @@ function build_tor {
 	# setup the volume
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$tor_home --opt o=bind $dc-vol-tor
 
-	# create TOR hashed password
-	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
-#	gen_torhash=`docker run --rm --entrypoint="" lcodes-tor tor --hash-password $gen_pass`
 
 
 	# start container
 	docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
+
+	# create TOR hashed password
+	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
+	gen_torhash=`docker exec lcodes-tor tor --hash-password $gen_pass`
 	# set TOR hashed password in torrc 
 	sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
 
