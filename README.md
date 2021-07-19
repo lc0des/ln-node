@@ -38,7 +38,7 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 ```
 git clone https://github.com/lc0des/ln-node
 cd ln-node
-./setup.sh -a
+./install.sh -a
 ```
 
 ## Wallets
