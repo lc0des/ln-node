@@ -83,6 +83,7 @@ function setup_th_config {
 	lnd="lnd.conf"
 	th_docker_path="/app/data/lnd/"
 	echo "Copying $mac and $lnd to $dc-vol-th $th_docker_path"
+	docker exec $dc-th mkdir /app/data/lnd/
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $lnd $dc-th:$th_docker_path

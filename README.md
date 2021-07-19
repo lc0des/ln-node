@@ -9,7 +9,8 @@ This means i will not add any extra fancy web-interface or alike. However, some 
 ## Target Audience
 This package is **NOT** for Unix/Linux starters. Probably also not for beginners with BTC/LN. Things can go terribly wrong.You have been warned. 
 
-For everyone else, you have a nice little script plus files here to quickly setup an environment and adjust it to your liking.
+For everyone else:   
+You have a nice little script plus files here to quickly setup an environment and adjust it to your liking.
 
 ## Anonymity
 This package is *not* designed for anonymity through the Tor Network. Tor is used
