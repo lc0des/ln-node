@@ -70,11 +70,10 @@ function setup_daemon_config {
 	echo "RTL Password: $gen_pass" >> $DESCLOG
 
 	# setup for th
-	#echo "Adding random password to rtl conf (RTL-Config.json)"
-	#gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
-	#sed -i "s/REPLACEME_RTLPASSWORD/$gen_pass/" ../rtl/RTL-Config.json
-	#echo "RTL Password: $gen_pass" >> $DESCLOG
-
+	echo "Adding random password to th conf (th.yaml)"
+	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
+	sed -i "s/REPLACEME_THPASSWORD/$gen_pass/" ../th/th.yaml
+	echo "TH Password: $gen_pass" >> $DESCLOG
 
 }
 
