@@ -310,7 +310,7 @@ function build_tor {
 function build_bos {
 	mkdir -p $bos_home
 	cd $bos_home
-i#	git https://github.com/alexbosworth/balanceofsatoshis
+#	git https://github.com/alexbosworth/balanceofsatoshis
 #	cd balanceofsatoshis
 	echo "Pulling BOS from dockerhub..."
 	mkdir $userhome/.bos
@@ -319,7 +319,7 @@ i#	git https://github.com/alexbosworth/balanceofsatoshis
 	docker run -it --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis --version
 	sleep 5
 	echo "This must show correct reporting..."
-	docker run -it --rm --network="$lcodes-net" --add-host=$dchost:$lnd_ip -v $userhome/.bos:/home/node/.bos -v $workdir/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
+	docker run -it --rm --network="$dchost-net" --add-host=$dchost:$lnd_ip -v $userhome/.bos:/home/node/.bos -v $workdir/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
 	sleep 5
 
 

@@ -1,6 +1,6 @@
 masterPassword: 'REPLACEME_THPASSWORD'
 accounts:
-  - name: 'highway'
+  - name: 'fackel'
     serverUrl: 172.20.0.3:10009
     certificatePath: '/app/data/lnd/tls.cert'
     macaroonPath: '/app/data/lnd/admin.macaroon'
