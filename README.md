@@ -1,3 +1,5 @@
+# !ONLY USE ON TESTNODES SOME PARAMETERS ARE STILL HARDCODED!
+
 # ln-node
 
 ## What is the difference to others
