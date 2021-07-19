@@ -21,10 +21,15 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 * Support of Ride the Lightning
 
 ## Version
-Version 0.1-Alpha
+* Version 0.1-Alpha
+
+### Tested
+
+* Debian 10.10 - Working
 
 
 ## Usage
+
 ```
 git clone https://github.com/lc0des/ln-node
 cd ln-node
