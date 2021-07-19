@@ -18,3 +18,4 @@ alias hgw-tor-logs='docker logs -f $dc-tor'
 alias hgw-btc-cli='docker exec -ti $dc-bitcoind bitcoin-cli'
 #alias hg-btc-daemon='docker exec -ti $dc-bitcoind bitcoind'
 alias hgw-lncli='docker exec -ti $dc-lnd lncli'
+alias hgw-bos="docker run -it --rm --network=$dc-net --add-host=fackel:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v $HOME/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"

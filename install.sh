@@ -90,6 +90,7 @@ function setup_daemon_config {
 function setup_th_config {
 	mac="admin.macaroon"
 	lnd="lnd.conf"
+	cert="tls.cert"
 	th_docker_path="/app/data/lnd/"
 	th_yaml_path="/app/data/th.yaml"
 	th_yaml_dpath="/app/data/th.yaml"
@@ -97,8 +98,10 @@ function setup_th_config {
 	docker exec -u $uid:$gid $dc-th mkdir $th_docker_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
+	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$cert .
 	docker cp $lnd $dc-th:$th_docker_path
 	docker cp $mac $dc-th:$th_docker_path
+	docker cp $cert $dc-th:$th_docker_path
 	docker cp $repodir/th/th.yaml $dc-th:$th_yaml_dpath
 	docker restart $dc-th
 }
@@ -319,11 +322,14 @@ function build_bos {
 	docker run -it --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis --version
 	sleep 5
 	echo "This must show correct reporting..."
-	docker run -it --rm --network="$dchost-net" --add-host=$dchost:$lnd_ip -v $userhome/.bos:/home/node/.bos -v $workdir/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $userhome/.bos:/home/node/.bos -v $workdir/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
 	sleep 5
+}
+
+# suez
 
 
-	}
+# charge-lnd
 
 # basic checks if all has worked
 function check_run() {
