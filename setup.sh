@@ -85,7 +85,7 @@ function setup_th_config {
 	th_yaml_path="/app/data/th.yaml"
 	th_yaml_dpath="/app/data/th.yaml"
 	echo "Copying $mac and $lnd to $dc-vol-th $th_docker_path"
-	docker exec $dc-th mkdir /app/data/lnd/
+	docker exec -u $uid:$gid $dc-th mkdir $th_docker_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $lnd $dc-th:$th_docker_path

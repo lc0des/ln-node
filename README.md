@@ -23,6 +23,7 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 * Support of Tor
 * Support of Thunderhub
 * Support of Ride the Lightning
+* Management Services can **ONLY** be accessed through localhost
 
 ## Version
 * Version 0.1-Alpha
