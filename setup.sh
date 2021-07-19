@@ -202,7 +202,7 @@ function build_tor {
 	# start container
 	docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
 	echo "Waiting for $dc-tor to come up"
-	sleep 10
+	sleep 30
 
 	# create TOR hashed password
 	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
