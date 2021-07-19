@@ -42,7 +42,7 @@ if [ $# -lt 1 ];then
 fi
 
 function setup_bash_alias {
-	cd $repository
+	cd $repodir
 	cat supply/lcodes_bashrc >> .bashrc
 }
 
@@ -107,13 +107,12 @@ function setup_rtl_config {
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $lnd $dc-rtl:/data/lnd/
 	docker cp $mac $dc-rtl:/data/lnd/
-	docker restart lcodes-rtl
+	docker restart $dc-rtl
 }
 
 function setup_lnd_wallet {
 	echo "Creating LND Wallet, please enter Passphrase"
-	docker exec -ti lcodes-lnd lncli create
-#	docker exec -ti lcodes-lnd lncli unlock
+	docker exec -ti $dc-lnd lncli create
 }
 
 function prepare_system {
@@ -167,9 +166,9 @@ function build_bitcoind {
 
 
 # Lightning Network Daemon  ###############################
-#							  #
-# Create the lnd container			     	  #
-#							  #
+#							  							  #
+# Create the lnd container			     	  			  #
+#							  							  #
 ###########################################################
 function build_lnd {
 
@@ -182,7 +181,7 @@ docker build . -t $dc-lnd
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$lnd_home --opt o=bind $dc-vol-lnd
 
 # removed  flag for restart always
-docker run  -d --restart=always --net=lcodes-net --ip=$lnd_ip -p 9735:9735 -p9911:9911 -p 127.0.0.1:8080:8080 -p 127.0.0.1:10009:10009 --name $dc-lnd -v $dc-vol-lnd:/app/.lnd $dc-lnd
+docker run  -d --restart=always --net=$dc-net --ip=$lnd_ip -p 9735:9735 -p9911:9911 -p 127.0.0.1:8080:8080 -p 127.0.0.1:10009:10009 --name $dc-lnd -v $dc-vol-lnd:/app/.lnd $dc-lnd
 cd ..
 
 }
@@ -207,7 +206,7 @@ function build_rtl {
 	cp Dockerfile RTL-Config.json ../RTL/
 	cd ../RTL
 	
-	docker build . -t lcodes-rtl
+	docker build . -t $dc-rtl
 	
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rtl_home --opt o=bind $dc-vol-rtl
 	
@@ -217,9 +216,9 @@ function build_rtl {
 }
 
 # Thunderhub ##############################################
-#							  #
-# Create the thunderhub container			  #
-#							  #
+#							  							  #
+# Create the thunderhub container			  			  #
+#							  							  #
 ###########################################################
 function build_th {
 
@@ -234,7 +233,7 @@ git clone https://github.com/apotdevin/thunderhub -b v0.12.21
 cd thunderhub
 
 # build container
-docker build . -t lcodes-th
+docker build . -t $dc-th
 
 # setup volume
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$th_home --opt o=bind $dc-vol-th
@@ -245,9 +244,9 @@ cd ..
 }
 
 # TOR #####################################################
-#							  #
-# Create the good old TOR container ... yeaaaahhh	  #
-#							  #
+#							  							  #
+# Create the good old TOR container ... yeaaaahhh	      #
+#							    						  #
 ###########################################################
 function build_tor {
 	
@@ -273,7 +272,7 @@ function build_tor {
 
 	# create TOR hashed password
 	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
-	gen_torhash=`docker exec lcodes-tor tor --hash-password $gen_pass`
+	gen_torhash=`docker exec $dc-tor tor --hash-password $gen_pass`
 	# set TOR hashed password in torrc 
 	sed -i "s/16:3395E2777E2DFC5560DDAB07C1717D261E7D3B5D29827EAAF109B33290/$gen_torhash/" ../tor/torrc
 	#sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
@@ -283,14 +282,14 @@ function build_tor {
 	docker cp ../tor/torrc $dc-tor:/app/torrc
 
 	# restarting the container 
-	docker restart lcodes-tor
+	docker restart $dc-tor
 
 	# set TOR password in LND conf
 	sed -i "s/REPLACEME_TORPASSWORD/$gen_pass/" ../lnd/lnd.conf
 	sleep 5
 
-	tor_bitcoind=`docker exec -ti lcodes-tor cat /app/data/lcodes-bitcoind/hostname`
-	tor_lnd=`docker exec -ti lcodes-tor cat /app/data/lcodes-lnd/hostname`
+	tor_bitcoind=`docker exec -ti $dc-tor cat /app/data/lcodes-bitcoind/hostname`
+	tor_lnd=`docker exec -ti $dc-tor cat /app/data/lcodes-lnd/hostname`
 	echo "Bitcoin Onion Addr: $tor_bitcoind" >> $DESCLOG
 	echo "LND Onion Addr: $tor_bitcoind" >> $DESCLOG
 
