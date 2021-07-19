@@ -8,8 +8,14 @@ This package is **NOT** for Unix/Linux starters. Probably also not for beginners
 
 For everyone else, you have a nice little script plus files here to quickly setup an environment and adjust it to your liking.
 
+## Anonymity
+This package is *not* designed for anonymity through the Tor Network. Tor is used
+for being able to communicate with Tor LN nodes as well as supporting the P2P connections of bitcoind and lnd in Tor.
+
 ## Features
 
+* Out of the Box Bitcoind and LND
+* All dockerized and running in an own network
 * Support of Tor
 * Support of Thunderhub
 * Support of Ride the Lightning
@@ -33,12 +39,13 @@ cd ln-node
 * rnd hash for tor, plus automatic wire during setup time
 * sensitive services only accessable by localhost
 * wire bitcoind with tor (support for clearnet AND tor network)
+* wire lnd with tor
+* wallet creation at runtime
 
 ## Todo
 
-* wire Thunderhub with ln-node
 * wire RTL with ln-node
-* wire lnd with tor
+* wire Thunderhub with ln-node
 
 ## Disclaimer
 Run at your own RISK! I do not take any responsibility for you loosing any funds or alike. This software is provided AS-IS.

@@ -57,11 +57,22 @@ function setup_daemon_config {
 
 }
 
+function setup_rtl_config {
+	mac="admin.macaroon"
+	lnd="lnd.conf"
+	rtl_docker_path="/data/lnd/"
+	echo "Copying $mac and $lnd to $dc-vol-rtl $rtl_docker_path"
+	docker cp $dc-lnd:/app/.lnd/$lnd .
+	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
+	docker cp $lnd $dc-rtl:/data/lnd/
+	docker cp $mac $dc-rtl:/data/lnd/
+	docker restart lcodes-rtl
+}
 
-function setup_lnd_password {
+function setup_lnd_wallet {
 	echo "Creating LND Wallet, please enter Passphrase"
 	docker exec -ti lcodes-lnd lncli create
-	docker exec -ti lcodes-lnd lncli unlock
+#	docker exec -ti lcodes-lnd lncli unlock
 }
 
 function prepare_system {
@@ -202,7 +213,7 @@ function build_tor {
 	# start container
 	docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
 	echo "Waiting for $dc-tor to come up"
-	sleep 30
+	sleep 10
 
 	# create TOR hashed password
 	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
@@ -268,7 +279,8 @@ while getopts ${optstring} arg; do
 	build_lnd
 	build_rtl
 	build_th
-	setup_lnd_password
+	setup_lnd_wallet
+	setup_rtl_config
    ;;
    h)
 	usage
