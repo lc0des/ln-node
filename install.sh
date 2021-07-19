@@ -41,6 +41,11 @@ if [ $# -lt 1 ];then
 	exit
 fi
 
+function setup_bash_alias {
+	cd $repository
+	cat supply/lcodes_bashrc >> .bashrc
+}
+
 function setup_daemon_config {
 
 	# setup for bitcoind
@@ -333,6 +338,7 @@ while getopts ${optstring} arg; do
 	setup_lnd_wallet
 	setup_rtl_config
 	setup_th_config
+	setup_bash_alias
    ;;
    h)
 	usage
