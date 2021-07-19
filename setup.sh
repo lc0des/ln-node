@@ -82,12 +82,15 @@ function setup_th_config {
 	mac="admin.macaroon"
 	lnd="lnd.conf"
 	th_docker_path="/app/data/lnd/"
+	th_yaml_path="/app/data/th.yaml"
+	th_yaml_dpath="/app/data/th.yaml"
 	echo "Copying $mac and $lnd to $dc-vol-th $th_docker_path"
 	docker exec $dc-th mkdir /app/data/lnd/
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $lnd $dc-th:$th_docker_path
 	docker cp $mac $dc-th:$th_docker_path
+	docker cp $repodir/th/th.yaml $dc-th:$th_yaml_dpath
 	docker restart $dc-th
 }
 
