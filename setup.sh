@@ -201,12 +201,14 @@ function build_tor {
 
 	# start container
 	docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
+	sleep 5
 
 	# create TOR hashed password
 	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
 	gen_torhash=`docker exec lcodes-tor tor --hash-password $gen_pass`
 	# set TOR hashed password in torrc 
 	sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
+	sleep 5
 
 	# copying new torrc over 
 	docker cp ../tor/torrc $dc-tor:/app/torrc
@@ -216,6 +218,7 @@ function build_tor {
 
 	# set TOR password in LND conf
 	sed -i "s/REPLACEME_TORPASSWORD/$gen_pass/" ../lnd/lnd.conf
+	sleep 5
 
 	tor_bitcoind=`docker exec -ti lcodes-tor cat /app/data/lcodes-bitcoind/hostname`
 	tor_lnd=`docker exec -ti lcodes-tor cat /app/data/lcodes-lnd/hostname`
