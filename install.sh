@@ -239,7 +239,7 @@ docker build . -t $dc-th
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$th_home --opt o=bind $dc-vol-th
 
 # run the container
-docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ --env NO_VERSION_CHECK="true" --env LOG_LEVEL="debug" --env ACCOUNT_CONFIG_PATH="/app/data/th.yaml" $dc-th
+docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ --add-host=fackel:172.20.0.3 --env NO_VERSION_CHECK="true" --env LOG_LEVEL="debug" --env ACCOUNT_CONFIG_PATH="/app/data/th.yaml" $dc-th
 cd ..
 }
 
