@@ -183,31 +183,49 @@ cd ..
 #							  #
 ###########################################################
 function build_tor {
-# create new tor daemon home
-mkdir -p $tor_home
-cd $repodir
+	
+	# create new tor daemon home
+	mkdir -p $tor_home
+	cd $repodir
 
-# lets move into the directory
-cd tor
+	# lets move into the directory
+	cd tor
 
-# build the docker image
-docker build . -t $dc-tor
+	# build the docker image
+	docker build . -t $dc-tor
 
-# setup the volume
-docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$tor_home --opt o=bind $dc-vol-tor
+	# setup the volume
+	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$tor_home --opt o=bind $dc-vol-tor
 
-# start container
-docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
-tor_bitcoind=`docker exec -ti lcodes-tor cat /app/data/lcodes-bitcoind/hostname`
-tor_lnd=`docker exec -ti lcodes-tor cat /app/data/lcodes-lnd/hostname`
-echo "Bitcoin Onion Addr: $tor_bitcoind" >> $DESCLOG
-echo "LND Onion Addr: $tor_bitcoind" >> $DESCLOG
+	# create TOR hashed password
+	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
+#	gen_torhash=`docker run --rm --entrypoint="" lcodes-tor tor --hash-password $gen_pass`
 
-# subsitate placeholde with ONION Address
-sed -i "s/REPLACEME_ONION_ADDR/$tor_bitcoind/" ../bitcoind/bitcoin.conf
 
-# leaving directory
-cd ..
+	# start container
+	docker run  -d --restart=always --net=$dc-net --ip=$tor_ip -v $dc-vol-tor:/app/data/ --name $dc-tor $dc-tor
+	# set TOR hashed password in torrc 
+	sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
+
+	# copying new torrc over 
+	docker cp ../tor/torrc $dc-tor:/app/torrc
+
+	# restarting the container 
+	docker restart lcodes-tor
+
+	# set TOR password in LND conf
+	sed -i "s/REPLACEME_TORPASSWORD/$gen_pass/" ../lnd/lnd.conf
+
+	tor_bitcoind=`docker exec -ti lcodes-tor cat /app/data/lcodes-bitcoind/hostname`
+	tor_lnd=`docker exec -ti lcodes-tor cat /app/data/lcodes-lnd/hostname`
+	echo "Bitcoin Onion Addr: $tor_bitcoind" >> $DESCLOG
+	echo "LND Onion Addr: $tor_bitcoind" >> $DESCLOG
+
+	# subsitate placeholde with ONION Address
+	sed -i "s/REPLACEME_ONION_ADDR/$tor_bitcoind/" ../bitcoind/bitcoin.conf
+
+	# leaving directory
+	cd ..
 }
 
 # basic checks if all has worked

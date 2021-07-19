@@ -9,4 +9,4 @@ HiddenServicePort 8333 172.20.0.2:8333
 HiddenServiceDir /app/data/lcodes-lnd/
 HiddenServicePort 9735 172.20.0.3:9735
 
-HashedControlPassword 16:3AC61CFB2E6EA5746009F73E1E5ECE100EFA2420483C76F137354C8179
+HashedControlPassword REPLACEME_TORHASHEDPASSWORD
