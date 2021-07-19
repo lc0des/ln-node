@@ -1,0 +1,20 @@
+#######################################################
+#
+# Bashrc file with commands prepared for lcodes highway
+# 							   .pp i'am the highway pp.
+#######################################################
+dc="lcodes"
+
+alias hg-btc-shell='docker exec -ti $dc-bitcoind bash'
+alias hg-btc-logs='docker logs -f $dc-bitcoind'
+alias hg-lnd-shell='docker exec -ti $dc-lnd bash'
+alias hg-th-shell='docker exec -ti $dc-th sh'
+alias hg-rtl-shell='docker exec -ti $dc-rtl bash'
+alias hg-tor-shell='docker exec -ti $dc-tor bash'
+alias hg-lnd-logs='docker logs -f $dc-lnd'
+alias hg-th-logs='docker logs -f $dc-th'
+alias hg-rtl-logs='docker logs -f $dc-rtl'
+alias hg-tor-logs='docker logs -f $dc-tor'
+alias hg-btc-cli='docker exec -ti $dc-bitcoind bitcoin-cli'
+#alias hg-btc-daemon='docker exec -ti $dc-bitcoind bitcoind'
+alias hg-lncli='docker exec -ti $dc-lnd lncli'

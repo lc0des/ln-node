@@ -1,6 +1,6 @@
-masterPassword: 'meisterkennwort'
+masterPassword: 'REPLACEME_THPASSWORD'
 accounts:
-  - name: 'lnnode'
+  - name: 'highway'
     serverUrl: 172.20.0.3:10009
     certificatePath: '/app/data/lnd/tls.cert'
     macaroonPath: '/app/data/lnd/admin.macaroon'
