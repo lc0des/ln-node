@@ -346,7 +346,7 @@ while getopts ${optstring} arg; do
         exit
    ;;
 
-   :)   echo 'ehlp'
+   :)   echo 'help'
 	usage
 	exit
 ;;
