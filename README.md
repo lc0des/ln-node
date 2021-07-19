@@ -1,6 +1,6 @@
 # !ONLY USE ON TESTNODES SOME PARAMETERS ARE STILL HARDCODED!
 
-# ln-node
+# ⚡ ln-node ⚡
 
 ## What is the difference to others
 LN-Node is my implementation for setting up a Lightning Network Node quickly on a Debian/Ubuntu System. The goal is to keep it as light as possible but also useable out of the box as a router node.
@@ -19,14 +19,16 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 ## Features
 
 * Out of the Box Bitcoind and LND
-* All dockerized and running in an own network
-* Support of Tor
-* Support of Thunderhub
-* Support of Ride the Lightning
-* Management Services can **ONLY** be accessed through localhost
+* Supports Tor
+* Supports Thunderhub
+* Supports Ride the Lightning
+* Supports BOS
+* Supports Rebalance-LND
+* Management Services **ONLY** accessable through localhost
+* All dockerized and running their an own network
 
 ## Version
-* Version 0.1-Alpha
+* Version 0.2-Alpha
 
 ### Tested
 * Debian 10.10 - Working
@@ -74,7 +76,7 @@ Or shred:
 $ shred ln-node/data/logs/setup.log
 ```
 
-## Done
+## Done ⚡
 
 * build fresh container for bitcoind, lnd, th, rtl, tor
 * build volumes for each container
@@ -86,11 +88,15 @@ $ shred ln-node/data/logs/setup.log
 * wallet creation at runtime
 * wire RTL with ln-node
 * random password rtl
+* wire Thunderhub with ln-node
+* random password thunderhub
+* add BOS
 
 ## Todo
 
-* wire Thunderhub with ln-node
-* random password thunderhub
+* add Rebalance-LND
+* add charge-lnd
+* add suez
 * add flag for password on screen output only 
 * configuration for tor only (no clearnet)
 * service hardening

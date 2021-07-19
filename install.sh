@@ -378,6 +378,7 @@ while getopts ${optstring} arg; do
 	setup_bash_alias
 
 	build_bos
+	build_reblnd
    ;;
    h)
 	usage
