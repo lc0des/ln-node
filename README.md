@@ -30,10 +30,44 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 
 ## Usage
 
+### Installation
 ```
 git clone https://github.com/lc0des/ln-node
 cd ln-node
 ./setup.sh -a
+```
+
+## Wallets
+
+### Bitcoind 
+
+During setup *no* wallet is created, you have to do this for yourself.
+
+### LND
+
+During setup a wallet *is* created, the password has to be choosen manually.
+
+## Passwords
+
+For the following services the passwords are randomly generated during setup time:  
+* Bitcoind RPC
+* LND Macaroons (automatically after wallet creation)
+* Tor
+* Ride the Lightning
+* Thunderhub
+
+A **cleartext** password **file** is created at `ln-node/data/logs/setup.log` for 
+getting access to services like RTL. Please make sure that you will **erase** the 
+file after **storing** the passwords in a **secure** area.
+
+For this you can use wipe:
+```
+$ wipe ln-node/data/logs/setup.log
+```
+
+Or shred:
+```
+$ shred ln-node/data/logs/setup.log
 ```
 
 ## Done
@@ -47,12 +81,13 @@ cd ln-node
 * wire lnd with tor
 * wallet creation at runtime
 * wire RTL with ln-node
+* random password rtl
 
 ## Todo
 
 * wire Thunderhub with ln-node
-* random password rtl
 * random password thunderhub
+* add flag for password on screen output only 
 
 ## Disclaimer
 Run at your own RISK! I do not take any responsibility for you loosing any funds or alike. This software is provided AS-IS.
