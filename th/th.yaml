@@ -1,6 +1,6 @@
 masterPassword: 'meisterkennwort'
 accounts:
   - name: 'lnnode'
-    serverUrl: 172.20.0.2:10009
+    serverUrl: 172.20.0.3:10009
     certificatePath: '/app/data/lnd/tls.cert'
     macaroonPath: '/app/data/lnd/admin.macaroon'
