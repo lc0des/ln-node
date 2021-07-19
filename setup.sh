@@ -208,7 +208,8 @@ function build_tor {
 	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
 	gen_torhash=`docker exec lcodes-tor tor --hash-password $gen_pass`
 	# set TOR hashed password in torrc 
-	sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
+	sed -i "s/881A8D4F1E9FB2D3C8A25CE1317B111BB162B273F40FE9/$gen_torhash/" ../tor/torrc
+	#sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
 	sleep 5
 
 	# copying new torrc over 
