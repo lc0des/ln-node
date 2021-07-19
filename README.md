@@ -76,7 +76,7 @@ Or shred:
 $ shred ln-node/data/logs/setup.log
 ```
 
-## Done ⚡
+## Done ✅ 
 
 * build fresh container for bitcoind, lnd, th, rtl, tor
 * build volumes for each container
