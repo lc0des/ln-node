@@ -3,10 +3,11 @@
 # ln-node
 
 ## What is the difference to others
-LN-Node is my implementation for setting up a Lightning Network Node quickly on a Debian/Ubuntu System. The goal is to keep it as light as possible but also useable out of the box.This means that Tools like Thunderhub or Ride The Lightning are onboard, but nothing more.
+LN-Node is my implementation for setting up a Lightning Network Node quickly on a Debian/Ubuntu System. The goal is to keep it as light as possible but also useable out of the box as a router node.
+This means i will not add any extra fancy web-interface or alike. However, some tools like Thunderhub or Ride The Lightning are onboarded, bos, rebalance, charge-lnd and suez might come in future as well.
 
 ## Target Audience
-This package is **NOT** for Unix/Linux starters. Probably also not for beginners with BTC/LN. Things can go terribly wrong - You have been warned. 
+This package is **NOT** for Unix/Linux starters. Probably also not for beginners with BTC/LN. Things can go terribly wrong.You have been warned. 
 
 For everyone else, you have a nice little script plus files here to quickly setup an environment and adjust it to your liking.
 
@@ -26,7 +27,6 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 * Version 0.1-Alpha
 
 ### Tested
-
 * Debian 10.10 - Working
 
 
@@ -90,6 +90,9 @@ $ shred ln-node/data/logs/setup.log
 * wire Thunderhub with ln-node
 * random password thunderhub
 * add flag for password on screen output only 
+* configuration for tor only (no clearnet)
+* service hardening
+* server hardening links
 
 ## Disclaimer
 Run at your own RISK! I do not take any responsibility for you loosing any funds or alike. This software is provided AS-IS.
