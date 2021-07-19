@@ -43,8 +43,8 @@ fi
 
 function setup_daemon_config {
 	cd $workdir/
-	gen_user=`cat /dev/urandom | xxd -l 10 -p -u -c 10|base64`
-	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u -c 42|base64`
+	gen_user=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
+	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u -c 42|sed -r 's/\s+//g'`
 	rpc_entry=`python ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
 	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" ../bitcoind/bitcoin.conf
 
