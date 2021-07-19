@@ -98,7 +98,7 @@ function setup_th_config {
 	docker exec -u $uid:$gid $dc-th mkdir $th_docker_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
-	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$cert .
+	docker cp $dc-lnd:/app/.lnd/$cert .
 	docker cp $lnd $dc-th:$th_docker_path
 	docker cp $mac $dc-th:$th_docker_path
 	docker cp $cert $dc-th:$th_docker_path
@@ -320,17 +320,24 @@ function build_bos {
 	docker pull alexbosworth/balanceofsatoshis
 	echo "Check output for errors ...."
 	docker run -it --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis --version
-	sleep 5
+	sleep 1 
 	echo "This must show correct reporting..."
 	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $userhome/.bos:/home/node/.bos -v $workdir/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
-	sleep 5
+	sleep 1
 }
 
 # suez
 
-
 # charge-lnd
 
+# rebalance-lnd
+function build_reblnd {
+	mkdir -p $rebalance_home
+	cd $rebalance_home
+	git https://github.com/C-Otto/rebalance-lnd && cd rebalance-lnd
+	cp $repodir/rebalance/Dockerfile .
+	docker build . -t $dc-reblnd
+}
 # basic checks if all has worked
 function check_run() {
 docker ps
