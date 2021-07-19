@@ -3,6 +3,7 @@ set -x
 userhome="/home/ln-node"
 repository="ln-node"
 dc="lcodes"
+dchost="fackel"
 workdir="$userhome/$repository/data"
 repodir="$userhome/$repository/"
 dockergw="172.20.0.1"
@@ -20,6 +21,10 @@ lnd_home="$workdir/lnd/"
 rtl_home="$workdir/rtl/"
 th_home="$workdir/th/"
 tor_home="$workdir/tor/"
+bos_home="$workdir/bos/"
+suez_home="$workdir/suez/"
+charge_home="$workdir/charge/"
+rebalance_home="$workdir/rebalance/"
 logs_home="$workdir/logs/"
 DESCLOG="$logs_home/setup.log"
 
@@ -43,7 +48,7 @@ fi
 
 function setup_bash_alias {
 	cd $repodir
-	cat supply/lcodes_bashrc >> .bashrc
+	cat supply/lcodes_bashrc >> $userhome/.bashrc
 }
 
 function setup_daemon_config {
@@ -239,7 +244,7 @@ docker build . -t $dc-th
 docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$th_home --opt o=bind $dc-vol-th
 
 # run the container
-docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ --add-host=fackel:172.20.0.3 --env NO_VERSION_CHECK="true" --env LOG_LEVEL="debug" --env ACCOUNT_CONFIG_PATH="/app/data/th.yaml" $dc-th
+docker run  -d --restart=always --name=$dc-th --net=$dc-net --ip=$th_ip -p 127.0.0.1:3000:3000/tcp -v $dc-vol-th:/app/data/ --add-host=$dchost:172.20.0.3 --env NO_VERSION_CHECK="true" --env LOG_LEVEL="debug" --env ACCOUNT_CONFIG_PATH="/app/data/th.yaml" $dc-th
 cd ..
 }
 
@@ -300,6 +305,26 @@ function build_tor {
 	cd ..
 }
 
+# BOS 
+
+function build_bos {
+	mkdir -p $bos_home
+	cd $bos_home
+i#	git https://github.com/alexbosworth/balanceofsatoshis
+#	cd balanceofsatoshis
+	echo "Pulling BOS from dockerhub..."
+	mkdir $userhome/.bos
+	docker pull alexbosworth/balanceofsatoshis
+	echo "Check output for errors ...."
+	docker run -it --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis --version
+	sleep 5
+	echo "This must show correct reporting..."
+	docker run -it --rm --network="$lcodes-net" --add-host=$dchost:$lnd_ip -v $userhome/.bos:/home/node/.bos -v $workdir/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
+	sleep 5
+
+
+	}
+
 # basic checks if all has worked
 function check_run() {
 docker ps
@@ -338,6 +363,8 @@ while getopts ${optstring} arg; do
 	setup_rtl_config
 	setup_th_config
 	setup_bash_alias
+
+	build_bos
    ;;
    h)
 	usage
