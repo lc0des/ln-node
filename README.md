@@ -41,11 +41,13 @@ cd ln-node
 * wire bitcoind with tor (support for clearnet AND tor network)
 * wire lnd with tor
 * wallet creation at runtime
+* wire RTL with ln-node
 
 ## Todo
 
-* wire RTL with ln-node
 * wire Thunderhub with ln-node
+* random password rtl
+* random password thunderhub
 
 ## Disclaimer
 Run at your own RISK! I do not take any responsibility for you loosing any funds or alike. This software is provided AS-IS.

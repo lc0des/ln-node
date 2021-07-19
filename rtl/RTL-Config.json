@@ -1,5 +1,5 @@
 {
-  "multiPass": "allesguthiersir.",
+  "multiPass": "REPLACEME_RTLPASSWORD",
   "port": "3001",
   "defaultNodeIndex": 1,
   "SSO": {
@@ -10,7 +10,7 @@
   "nodes": [
     {
       "index": 1,
-      "lnNode": "Node 1",
+      "lnNode": "ln-node",
       "lnImplementation": "LND",
       "Authentication": {
         "macaroonPath": "/data/lnd/",
@@ -18,12 +18,13 @@
       },
       "Settings": {
         "userPersona": "MERCHANT",
-        "themeMode": "DAY",
+        "themeMode": "NIGHT",
         "themeColor": "PURPLE",
         "channelBackupPath": "/data/lnd/",
         "enableLogging": true,
         "lnServerUrl": "https://172.20.0.3:8080",
-        "fiatConversion": false
+        "fiatConversion": false,
+        "currencyUnit": "EUR"
       }
     }
   ]

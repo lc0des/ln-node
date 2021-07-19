@@ -42,18 +42,33 @@ if [ $# -lt 1 ];then
 fi
 
 function setup_daemon_config {
+
+	# setup for bitcoind
+	echo "Generating random passwords for bitcoind..."
 	cd $workdir/
 	gen_user=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
 	gen_pass=`cat /dev/urandom | xxd -l 42 -p -u -c 42|sed -r 's/\s+//g'`
 	#rpc_entry=`python3 ../tools/rpcauth.py lnnode $gen_pass|grep rpcauth|cut -d '=' -f2`
 	rpc_entry=`python3 ../tools/rpcauth.py $gen_user $gen_pass|grep rpcauth|cut -d '=' -f2`
+	echo "Adding hashed password with user to bitcoin.conf"
 	sed -i "s/REPLACEME_RPCAUTH/$rpc_entry/" ../bitcoind/bitcoin.conf
+	echo "Bitcoind RPC User: $gen_user" >> $DESCLOG
+	echo "Bitcoind RPC Password: $gen_pass" >> $DESCLOG
+	echo "Bitcoind RPCAUTH: $rpc_entry" >> $DESCLOG
 
+	# setup for lnd
 	lnd_user=`echo $rpc_entry|cut -d ':' -f1`
 	lnd_pass=$gen_pass
-	#sed -i "s/REPLACEME_RPCUSER_LND/lnnode/" ../lnd/lnd.conf
+	echo "Adding password and user to lnd.conf"
 	sed -i "s/REPLACEME_RPCUSER_LND/$lnd_user/" ../lnd/lnd.conf
 	sed -i "s/REPLACEME_RPCPASSWORD_LND/$lnd_pass/" ../lnd/lnd.conf
+
+	# setup for rtl
+	echo "Adding random password to rtl conf (RTL-Config.json)"
+	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
+	sed -i "s/REPLACEME_RTLPASSWORD/$gen_pass/" ../rtl/RTL-Config.json
+	echo "RTL Password: $gen_pass" >> $DESCLOG
+
 
 }
 
@@ -92,32 +107,38 @@ function build_bridge {
 docker network create -d bridge --gateway $dockergw --ip-range $dockeripr --subnet $dockersub $dc-net
 }
 
-# Lightning Network Daemon  ###############################
-#							  #
-# Create the lnd container			     	  #
-#							  #
+
+
+# Bitcoin Daemon  #########################################
+#							  							  #
+# Create the bitcoin container			     	  		  #
+#							     						  #
 ###########################################################
+
 function build_bitcoind {
-# Create the bitcoind docker
-echo "Building new bitcoin core docker..."
 
-# create new bitcoin daemon home
-mkdir -p $bitcoind_home
-cd $repodir
-cd bitcoind/
+	# Create the bitcoind docker
+	echo "Building new bitcoin core docker..."
 
-#docker build -t $dc-bitcoind - < bitcoind/Dockerfile
-docker build . -t $dc-bitcoind
-cd ..
+	# create new bitcoin daemon home
+	mkdir -p $bitcoind_home
+	cd $repodir
+	cd bitcoind/
 
-# bitcoind volume
-echo "Building docker volume for bitcoind..."
-docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$bitcoind_home --opt o=bind $dc-vol-bitcoind
+	#docker build -t $dc-bitcoind - < bitcoind/Dockerfile
+	docker build . -t $dc-bitcoind
+	cd ..
 
-# removed  flag for restart always
-docker run -d  --restart=always -u=$uid:$gid --name=$dc-bitcoind --net=$dc-net -p 8333:8333 -p 127.0.0.1:8332:8332 --ip=$bitcoind_ip -v $dc-vol-bitcoind:/app/.bitcoin -u$uid:$gid $dc-bitcoind
+	# bitcoind volume
+	echo "Building docker volume for bitcoind..."
+	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$bitcoind_home --opt o=bind $dc-vol-bitcoind
+
+	# removed  flag for restart always
+	docker run -d  --restart=always -u=$uid:$gid --name=$dc-bitcoind --net=$dc-net -p 8333:8333 -p 127.0.0.1:8332:8332 --ip=$bitcoind_ip -v $dc-vol-bitcoind:/app/.bitcoin -u$uid:$gid $dc-bitcoind
 
 }
+
+
 
 # Lightning Network Daemon  ###############################
 #							  #
@@ -140,24 +161,33 @@ cd ..
 
 }
 
+
+
 # Ride the Lightning  #####################################
-#							  #
-# Create the rtl container			     	  #
-#							  #
+#							  							  #
+# Create the rtl container			     	  			  #
+#							  							  #
 ###########################################################
 function build_rtl {
-# Create the RTL Container
-echo "Lets build the Ride the Lightning App Container ..."
-mkdir -p $rtl_home
-cd $repodir
-git clone https://github.com/Ride-The-Lightning/RTL -b v0.11.0
-cd rtl
-cp Dockerfile RTL-Config.json ../RTL/
-cd ../RTL
-docker build . -t lcodes-rtl
-docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rtl_home --opt o=bind $dc-vol-rtl
-docker run -d  --name=$dc-rtl --restart=always -p 127.0.0.1:3001:3001 --net=$dc-net --ip=$rtl_ip $dc-rtl
-cd ..
+
+	# Create the RTL Container
+	echo "Lets build the Ride the Lightning App Container ..."
+	mkdir -p $rtl_home
+	cd $repodir
+	
+	git clone https://github.com/Ride-The-Lightning/RTL -b v0.11.0
+	
+	cd rtl
+	cp Dockerfile RTL-Config.json ../RTL/
+	cd ../RTL
+	
+	docker build . -t lcodes-rtl
+	
+	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rtl_home --opt o=bind $dc-vol-rtl
+	
+	docker run -d  --name=$dc-rtl --restart=always -p 127.0.0.1:3001:3001 --net=$dc-net --ip=$rtl_ip $dc-rtl
+	
+	cd ..
 }
 
 # Thunderhub ##############################################
