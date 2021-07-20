@@ -36,6 +36,10 @@ echo '	-t build thunderhub'
 echo '	-r build rtl'
 echo '	-b build bitcoind'
 echo '	-l build lnd'
+echo '	-s build suez'
+echo '	-c build charge'
+echo '	-R build rebalance-lnd'
+echo '	-b build bos'
 echo '	-a build all'
 echo '	-h help'
 }
@@ -111,14 +115,15 @@ function setup_suez_config {
 	cntr="$dc-suez"
 	docker_vol_path="/app/lnd/"
 	echo "Copying $mac and $cert to $dc-vol-suez $docker_vol_path"
-	docker run -d --rm --entrypoint="" -v $dc-vol-suez:$docker_vol_path $cntr sleep 3600
-	docker exec -u $uid:$gid $dc-suez mkdir $docker_vol_path
+	ret=`docker run -d --rm --entrypoint="" -v $dc-vol-suez:$docker_vol_path $cntr sleep 600`
+	docker exec -u $uid:$gid $ret mkdir $docker_vol_path
+	#docker exec -u $uid:$gid $dc-suez mkdir $docker_vol_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $dc-lnd:/app/.lnd/$cert .
-	docker cp $lnd $cntr:$docker_vol_path
-	docker cp $mac $cntr:$docker_vol_path
-	docker cp $cert $cntr:$docker_vol_path
+	docker cp $lnd $ret:$docker_vol_path
+	docker cp $mac $ret:$docker_vol_path
+	docker cp $cert $ret:$docker_vol_path
 	docker restart $cntr
 }
 
@@ -391,6 +396,7 @@ function build_reblnd {
 	cd $rebalance_home
 	git clone https://github.com/C-Otto/rebalance-lnd && cd rebalance-lnd
 	cp $repodir/rebalance/Dockerfile .
+	cp $repodir/rebalance/docker-entrypoint.sh .
 	docker build . -t $dc-reblnd
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rebalance_home --opt o=bind $dc-vol-reblnd
 	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-reblnd:/lnd:ro $dc-reblnd -h
@@ -405,9 +411,24 @@ ss -antpl
 
 prepare_system
 
-optstring=":hTtrbla"
+optstring=":hTtrblascRb"
 while getopts ${optstring} arg; do
  case ${arg} in
+   s) 
+    build_suez
+	setup_suez_config
+   ;;
+   c)
+    build_charge
+	setup_charge_config
+   ;;
+   R)
+    build_reblnd
+	setup_reblnd_config
+   ;;
+   b)
+    build_bos
+   ;;
    T)
 	build_tor
    ;;

@@ -1,8 +1,8 @@
 FROM python:3-slim
 
 ENV GRPC_LOCATION=172.20.0.3:10009
-ENV LND_DIR=/app/lnd
-ENV CONFIG_LOCATION=/app/charge.config
+ENV LND_DIR=~/.lnd/
+ENV CONFIG_LOCATION=~/charge.config
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -11,6 +11,9 @@ ENV GROUP_ID=$GROUP_ID
 
 RUN addgroup --gid $GROUP_ID charge
 RUN adduser --home /home/charge --uid $USER_ID --gid $GROUP_ID --disabled-login charge
+
+RUN mkdir -p $LND_DIR
+RUN chown -R $USER_ID:$GROUP_ID $LND_DIR
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
