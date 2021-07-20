@@ -93,7 +93,8 @@ function setup_charge_config {
 	cntr="$dc-charge"
 	docker_vol_path="/home/charge/.lnd/"
 	echo "Copying $mac and $cert to $dc-vol-charge $docker_vol_path"
-	docker exec -u $uid:$gid $cntr mkdir $docker_vol_path
+	docker run -d --rm --entrypoint="" -v $dc-vol-charge:/home/charge/ $cntr sleep 3600
+	docker exec -u $uid:$gid $cntr mkdir -p $docker_vol_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $dc-lnd:/app/.lnd/$cert .
@@ -110,6 +111,7 @@ function setup_suez_config {
 	cntr="$dc-suez"
 	docker_vol_path="/app/lnd/"
 	echo "Copying $mac and $cert to $dc-vol-suez $docker_vol_path"
+	docker run -d --rm --entrypoint="" -v $dc-vol-suez:$docker_vol_path $cntr sleep 3600
 	docker exec -u $uid:$gid $dc-suez mkdir $docker_vol_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
