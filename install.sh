@@ -3,7 +3,7 @@ set -x
 userhome="/home/ln-node"
 repository="ln-node"
 dc="lcodes"
-dchost="fackel"
+dchost="ln-node"
 workdir="$userhome/$repository/data"
 repodir="$userhome/$repository/"
 dockergw="172.20.0.1"
