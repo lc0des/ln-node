@@ -1,16 +1,16 @@
-# !ONLY USE ON TESTNODES SOME PARAMETERS ARE STILL HARDCODED!
+# ⚠ ONLY USE ON TESTNODES SOME PARAMETERS ARE STILL HARDCODED ⚠
 
 # ⚡ ln-node ⚡
 
 ## What is the difference to others
 LN-Node is my implementation for setting up a Lightning Network Node quickly on a Debian/Ubuntu System. The goal is to keep it as light as possible but also useable out of the box as a router node.
 This means i will not add any extra fancy web-interface or alike. However, some tools like:
-* Thunderhub
-* Ride The Lightning
-* BOS
-* rebalancei-lnd
-* charge-lnd
-* suez
+* [Thunderhub](https://github.com/apotdevin/thunderhub) 
+* [Ride The Lightning](https://github.com/Ride-The-Lightning/RTL)
+* [Balance of Satoshi](https://github.com/alexbosworth/balanceofsatoshis)
+* [rebalance-lnd](https://github.com/C-Otto/rebalance-lnd)
+* [charge-lnd](https://github.com/accumulator/charge-lnd)
+* [suez](https://github.com/prusnak/suez)
 are onboarded as i do consider them very helpful for the daily business of a node operator.
 
 ## Target Audience
@@ -104,7 +104,7 @@ $ shred ln-node/data/logs/setup.log
 * add charge-lnd
 * add suez
 
-## Todo
+## Todo 🚧
 
 * add flag for password on screen output only 
 * configuration for tor only (no clearnet)
@@ -114,7 +114,7 @@ $ shred ln-node/data/logs/setup.log
 * config file for pre-install phase
 * several flags for custom prefs
 
-## Disclaimer
+## ⚠ Disclaimer ⚠
 
 Run at your own RISK!  
 

@@ -4,6 +4,11 @@
 # 							   .pp i'am the highway pp.
 #######################################################
 dc="lcodes"
+bos_ip="172.20.0.20"
+charge_ip="172.20.0.21"
+rebalance_ip="172.20.0.22"
+suez_ip="172.20.0.23"
+
 
 alias hgw-btc-shell='docker exec -ti $dc-bitcoind bash'
 alias hgw-btc-logs='docker logs -f $dc-bitcoind'
@@ -18,4 +23,8 @@ alias hgw-tor-logs='docker logs -f $dc-tor'
 alias hgw-btc-cli='docker exec -ti $dc-bitcoind bitcoin-cli'
 #alias hg-btc-daemon='docker exec -ti $dc-bitcoind bitcoind'
 alias hgw-lncli='docker exec -ti $dc-lnd lncli'
-alias hgw-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v $HOME/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
+alias hgw-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v /home/ln-node/ln-node/data/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
+#alias hgw-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v $HOME/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
+alias hgw-suez="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$sues_ip -v lcodes-vol-suez:/app lcodes-suez"
+alias hgw-rebalance="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$rebalance_ip -v lcodes-vol-reblnd:/app lcodes-rebalance"
+alias hgw-charge="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$charge_ip -v lcodes-vol-charge:/app lcodes-charge charge-lnd --grpc=172.20.0.3:10009 --lnddir=/home/charge/.lnd/ $@"
