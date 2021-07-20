@@ -114,16 +114,16 @@ function setup_suez_config {
 	cert="tls.cert"
 	cntr="$dc-suez"
 	docker_vol_path="/app/lnd/"
-	echo "Copying $mac and $cert to $dc-vol-suez $docker_vol_path/lnd/"
+	echo "Copying $mac and $cert to $dc-vol-suez $docker_vol_path"
 	ret=`docker run -d --rm --entrypoint="" -v $dc-vol-suez:/app $cntr sleep 600`
-	docker exec -u $uid:$gid $ret mkdir $docker_vol_path/lnd
+	docker exec -u $uid:$gid $ret mkdir $docker_vol_path
 	#docker exec -u $uid:$gid $dc-suez mkdir $docker_vol_path
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $dc-lnd:/app/.lnd/$cert .
-	docker cp $lnd $ret:$docker_vol_path/lnd/
-	docker cp $mac $ret:$docker_vol_path/lnd/
-	docker cp $cert $ret:$docker_vol_path/lnd/
+	docker cp $lnd $ret:$docker_vol_path
+	docker cp $mac $ret:$docker_vol_path
+	docker cp $cert $ret:$docker_vol_path
 	#docker stop $cntr
 	#docker restart $cntr
 }
