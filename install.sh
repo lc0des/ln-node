@@ -350,7 +350,7 @@ function build_tor {
 	# set TOR hashed password in torrc 
 	sed -i "s/16:3395E2777E2DFC5560DDAB07C1717D261E7D3B5D29827EAAF109B33290/$gen_torhash/" ../tor/torrc
 	#sed -i "s/REPLACEME_TORHASHEDPASSWORD/$gen_torhash/" ../tor/torrc
-	sleep 5
+	sleep 1 
 
 	# copying new torrc over 
 	docker cp ../tor/torrc $dc-tor:/app/torrc
@@ -360,7 +360,7 @@ function build_tor {
 
 	# set TOR password in LND conf
 	sed -i "s/REPLACEME_TORPASSWORD/$gen_pass/" ../lnd/lnd.conf
-	sleep 5
+	sleep 1
 
 	tor_bitcoind=`docker exec -ti $dc-tor cat /app/data/lcodes-bitcoind/hostname`
 	tor_lnd=`docker exec -ti $dc-tor cat /app/data/lcodes-lnd/hostname`
@@ -401,7 +401,7 @@ function build_suez {
 	docker build . -t $dc-suez
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$suez_home --opt o=bind $dc-vol-suez
 	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip --ip=$suez_ip -v $dc-vol-suez:/app $dc-suez --help
-	sleep 10
+	sleep 1
 }
 
 # charge-lnd
@@ -413,7 +413,7 @@ function build_charge {
 	docker build . -t $dc-charge
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$charge_home --opt o=bind $dc-vol-charge
 	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip --ip=$charge_ip -v $dc-vol-charge:/app $dc-charge -h
-	sleep 10
+	sleep 1
 }
 
 # rebalance-lnd
@@ -426,7 +426,7 @@ function build_reblnd {
 	docker build . -t $dc-reblnd
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rebalance_home --opt o=bind $dc-vol-reblnd
 	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip --ip=$rebalance_ip -v $dc-vol-reblnd:/lnd:ro $dc-reblnd -h
-	sleep 10
+	sleep 1
 }
 
 # basic checks if all has worked
