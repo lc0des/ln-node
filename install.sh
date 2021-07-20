@@ -1,5 +1,6 @@
 #!/bin/bash
 set -x
+
 userhome="/home/ln-node"
 repository="ln-node"
 dc="lcodes"
@@ -37,7 +38,6 @@ echo '	-b build bitcoind'
 echo '	-l build lnd'
 echo '	-a build all'
 echo '	-h help'
-
 }
 
 
@@ -84,6 +84,7 @@ function setup_daemon_config {
 	gen_pass=`cat /dev/urandom | xxd -l 23 -p -u -c 23|sed -r 's/\s+//g'`
 	sed -i "s/REPLACEME_THPASSWORD/$gen_pass/" ../th/th.yaml
 	echo "TH Password: $gen_pass" >> $DESCLOG
+}
 
 function setup_charge_config {
 	mac="admin.macaroon"
@@ -393,6 +394,7 @@ function build_reblnd {
 	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-reblnd:/lnd:ro $dc-reblnd -h
 	sleep 10
 }
+
 # basic checks if all has worked
 function check_run() {
 docker ps
@@ -439,6 +441,7 @@ while getopts ${optstring} arg; do
 
 	setup_suez_config
 	setup_charge_config
+
    ;;
    h)
 	usage
