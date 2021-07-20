@@ -327,16 +327,39 @@ function build_bos {
 }
 
 # suez
+function build_suez {
+	mkdir -p $suez_home
+	cd $suez_home
+	git clone https://github.com/prusnak/suez && cd suez
+	cp $repodir/suez/Dockerfile .
+	docker build . -t $dc-suez
+	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$suez_home --opt o=bind $dc-vol-suez
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-suez:/app $dc-suez -h
+	sleep 10
+}
 
 # charge-lnd
+function build_charge {
+	mkdir -p $charge_home
+	cd $charge_home
+	git clone https://github.com/accumulator/charge-lnd && cd charge-lnd
+	cp $repodir/charge/Dockerfile .
+	docker build . -t $dc-charge
+	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$charge_home --opt o=bind $dc-vol-charge
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-charge:/app $dc-charge -h
+	sleep 10
+}
 
 # rebalance-lnd
 function build_reblnd {
 	mkdir -p $rebalance_home
 	cd $rebalance_home
-	git https://github.com/C-Otto/rebalance-lnd && cd rebalance-lnd
+	git clone https://github.com/C-Otto/rebalance-lnd && cd rebalance-lnd
 	cp $repodir/rebalance/Dockerfile .
 	docker build . -t $dc-reblnd
+	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rebalance_home --opt o=bind $dc-vol-reblnd
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-reblnd:/lnd:ro $dc-reblnd -h
+	sleep 10
 }
 # basic checks if all has worked
 function check_run() {
@@ -379,6 +402,8 @@ while getopts ${optstring} arg; do
 
 	build_bos
 	build_reblnd
+	build_charge
+	build_suez
    ;;
    h)
 	usage
