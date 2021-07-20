@@ -85,6 +85,38 @@ function setup_daemon_config {
 	sed -i "s/REPLACEME_THPASSWORD/$gen_pass/" ../th/th.yaml
 	echo "TH Password: $gen_pass" >> $DESCLOG
 
+function setup_charge_config {
+	mac="admin.macaroon"
+	lnd="lnd.conf"
+	cert="tls.cert"
+	cntr="$dc-charge"
+	docker_vol_path="/home/charge/.lnd/"
+	echo "Copying $mac and $cert to $dc-vol-charge $docker_vol_path"
+	docker exec -u $uid:$gid $cntr mkdir $docker_vol_path
+	docker cp $dc-lnd:/app/.lnd/$lnd .
+	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
+	docker cp $dc-lnd:/app/.lnd/$cert .
+	docker cp $lnd $cntr:$docker_vol_path
+	docker cp $mac $cntr:$docker_vol_path
+	docker cp $cert $cntr:$docker_vol_path
+	docker restart $cntr
+}
+
+function setup_suez_config {
+	mac="admin.macaroon"
+	lnd="lnd.conf"
+	cert="tls.cert"
+	cntr="$dc-suez"
+	docker_vol_path="/app/lnd/"
+	echo "Copying $mac and $cert to $dc-vol-suez $docker_vol_path"
+	docker exec -u $uid:$gid $dc-suez mkdir $docker_vol_path
+	docker cp $dc-lnd:/app/.lnd/$lnd .
+	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
+	docker cp $dc-lnd:/app/.lnd/$cert .
+	docker cp $lnd $cntr:$docker_vol_path
+	docker cp $mac $cntr:$docker_vol_path
+	docker cp $cert $cntr:$docker_vol_path
+	docker restart $cntr
 }
 
 function setup_th_config {
@@ -334,7 +366,7 @@ function build_suez {
 	cp $repodir/suez/Dockerfile .
 	docker build . -t $dc-suez
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$suez_home --opt o=bind $dc-vol-suez
-	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-suez:/app $dc-suez -h
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-suez:/app $dc-suez --help
 	sleep 10
 }
 
@@ -404,6 +436,9 @@ while getopts ${optstring} arg; do
 	build_reblnd
 	build_charge
 	build_suez
+
+	setup_suez_config
+	setup_charge_config
    ;;
    h)
 	usage
