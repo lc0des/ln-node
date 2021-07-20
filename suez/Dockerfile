@@ -16,4 +16,4 @@ RUN poetry install
 # /root/.cache/pypoetry/virtualenvs/suez-MqEJMpNd-py3.7 (Activated)
 #RUN chown -R 1000:1000 /app
 #USER 1000:1000
-ENTRYPOINT ["poetry","run","./suez","--client-args=--macaroonpath=/app/lnd/admin.macaroon", "--client-args=--tlscertpath=/app/lnd/tls.cert", "--client-args=--rpcserver=10.21.21.9:10009"]
+ENTRYPOINT ["poetry","run","./suez","--client-args=--macaroonpath=/app/lnd/admin.macaroon", "--client-args=--tlscertpath=/app/lnd/tls.cert", "--client-args=--rpcserver=172.20.0.3:10009"]

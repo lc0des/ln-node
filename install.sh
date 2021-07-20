@@ -15,6 +15,10 @@ lnd_ip="172.20.0.3"
 tor_ip="172.20.0.5"
 th_ip="172.20.0.10"
 rtl_ip="172.20.0.11"
+bos_ip="172.20.0.20"
+charge_ip="172.20.0.21"
+rebalance_ip="172.20.0.22"
+suez_ip="172.20.0.23"
 uid=1000
 gid=1000
 bitcoind_home="$workdir/bitcoin/"
@@ -99,6 +103,7 @@ function setup_charge_config {
 	echo "Copying $mac and $cert to $dc-vol-charge $docker_vol_path"
 	ret=`docker run -d --rm --entrypoint="" -v $dc-vol-charge:/home/charge/ $cntr sleep 3600`
 	docker exec -u $uid:$gid $ret mkdir -p $docker_vol_path
+	docker exec -u $uid:$gid $ret mkdir -p $docker_vol_path/data/chain/bitcoin/mainnet/
 	docker cp $dc-lnd:/app/.lnd/$lnd .
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $dc-lnd:/app/.lnd/$cert .
@@ -375,7 +380,7 @@ function build_suez {
 	cp $repodir/suez/Dockerfile .
 	docker build . -t $dc-suez
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$suez_home --opt o=bind $dc-vol-suez
-	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-suez:/app $dc-suez --help
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip --ip=$suez_ip -v $dc-vol-suez:/app $dc-suez --help
 	sleep 10
 }
 
@@ -387,7 +392,7 @@ function build_charge {
 	cp $repodir/charge/Dockerfile .
 	docker build . -t $dc-charge
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$charge_home --opt o=bind $dc-vol-charge
-	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-charge:/app $dc-charge -h
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip --ip=$charge_ip -v $dc-vol-charge:/app $dc-charge -h
 	sleep 10
 }
 
@@ -400,7 +405,7 @@ function build_reblnd {
 	cp $repodir/rebalance/docker-entrypoint.sh .
 	docker build . -t $dc-reblnd
 	docker volume create --driver local --opt o=uid=$uid,gid=$uid --opt device=$rebalance_home --opt o=bind $dc-vol-reblnd
-	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip -v $dc-vol-reblnd:/lnd:ro $dc-reblnd -h
+	docker run -it --rm --network="$dc-net" --add-host=$dchost:$lnd_ip --ip=$rebalance_ip -v $dc-vol-reblnd:/lnd:ro $dc-reblnd -h
 	sleep 10
 }
 
