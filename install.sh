@@ -94,6 +94,27 @@ function setup_daemon_config {
 	echo "TH Password: $gen_pass" >> $DESCLOG
 }
 
+function setup_bos_config {
+	echo "not implemented yet"
+}
+function setup_rebalance_config {
+	mac="admin.macaroon"
+	lnd="lnd.conf"
+	cert="tls.cert"
+	cntr="$dc-reblnd"
+	docker_vol_path="/app/lnd/"
+	echo "Copying $mac and $cert to $dc-vol-reblnd $docker_vol_path"
+	ret=`docker run -d --rm --entrypoint="" -v $dc-vol-reblnd:/app $cntr sleep 3600`
+	docker exec -u $uid:$gid $ret mkdir -p $docker_vol_path
+	docker exec -u $uid:$gid $ret mkdir -p $docker_vol_path/data/chain/bitcoin/mainnet/
+	docker cp $dc-lnd:/app/.lnd/$lnd .
+	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
+	docker cp $dc-lnd:/app/.lnd/$cert .
+	docker cp $lnd $ret:$docker_vol_path
+	docker cp $mac $ret:$docker_vol_path/data/chain/bitcoin/mainnet/
+	docker cp $cert $ret:$docker_vol_path
+	docker stop $ret
+}
 function setup_charge_config {
 	mac="admin.macaroon"
 	lnd="lnd.conf"
@@ -110,7 +131,7 @@ function setup_charge_config {
 	docker cp $lnd $ret:$docker_vol_path
 	docker cp $mac $ret:$docker_vol_path/data/chain/bitcoin/mainnet/
 	docker cp $cert $ret:$docker_vol_path
-#	docker stop $ret
+	docker stop $ret
 }
 
 function setup_suez_config {
@@ -129,8 +150,7 @@ function setup_suez_config {
 	docker cp $lnd $ret:$docker_vol_path
 	docker cp $mac $ret:$docker_vol_path
 	docker cp $cert $ret:$docker_vol_path
-	#docker stop $cntr
-	#docker restart $cntr
+	docker stop $ret
 }
 
 function setup_th_config {
@@ -470,6 +490,8 @@ while getopts ${optstring} arg; do
 
 	setup_suez_config
 	setup_charge_config
+	setup_rebalance_config
+	setup_bos_config
 
    ;;
    h)
