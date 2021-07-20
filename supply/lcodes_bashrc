@@ -4,27 +4,28 @@
 # 							   .pp i'am the highway pp.
 #######################################################
 dc="lcodes"
+short="hgw"
 bos_ip="172.20.0.20"
 charge_ip="172.20.0.21"
 rebalance_ip="172.20.0.22"
 suez_ip="172.20.0.23"
 
 
-alias hgw-btc-shell='docker exec -ti $dc-bitcoind bash'
-alias hgw-btc-logs='docker logs -f $dc-bitcoind'
-alias hgw-lnd-shell='docker exec -ti $dc-lnd bash'
-alias hgw-th-shell='docker exec -ti $dc-th sh'
-alias hgw-rtl-shell='docker exec -ti $dc-rtl bash'
-alias hgw-tor-shell='docker exec -ti $dc-tor bash'
-alias hgw-lnd-logs='docker logs -f $dc-lnd'
-alias hgw-th-logs='docker logs -f $dc-th'
-alias hgw-rtl-logs='docker logs -f $dc-rtl'
-alias hgw-tor-logs='docker logs -f $dc-tor'
-alias hgw-btc-cli='docker exec -ti $dc-bitcoind bitcoin-cli'
+alias $short-btc-shell='docker exec -ti $dc-bitcoind bash'
+alias $short-btc-logs='docker logs -f $dc-bitcoind'
+alias $short-lnd-shell='docker exec -ti $dc-lnd bash'
+alias $short-th-shell='docker exec -ti $dc-th sh'
+alias $short-rtl-shell='docker exec -ti $dc-rtl bash'
+alias $short-tor-shell='docker exec -ti $dc-tor bash'
+alias $short-lnd-logs='docker logs -f $dc-lnd'
+alias $short-th-logs='docker logs -f $dc-th'
+alias $short-rtl-logs='docker logs -f $dc-rtl'
+alias $short-tor-logs='docker logs -f $dc-tor'
+alias $short-btc-cli='docker exec -ti $dc-bitcoind bitcoin-cli'
 #alias hg-btc-daemon='docker exec -ti $dc-bitcoind bitcoind'
-alias hgw-lncli='docker exec -ti $dc-lnd lncli'
-alias hgw-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v /home/ln-node/ln-node/data/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
-#alias hgw-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v $HOME/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
-alias hgw-suez="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$sues_ip -v lcodes-vol-suez:/app lcodes-suez"
-alias hgw-rebalance="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$rebalance_ip -v lcodes-vol-reblnd:/app lcodes-rebalance"
-alias hgw-charge="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$charge_ip -v lcodes-vol-charge:/app lcodes-charge charge-lnd --grpc=172.20.0.3:10009 --lnddir=/home/charge/.lnd/ $@"
+alias $short-lncli='docker exec -ti $dc-lnd lncli'
+alias $short-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v /home/ln-node/ln-node/data/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
+#alias $short-bos="docker run -it --rm --network=$dc-net --add-host=ln-node:172.20.0.3 -v $HOME/.bos:/home/node/.bos -v $HOME/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis"
+alias $short-suez="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$sues_ip -v lcodes-vol-suez:/app lcodes-suez"
+alias $short-rebalance="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$rebalance_ip -v lcodes-vol-reblnd:/app lcodes-reblnd --grpc 172.20.0.3:10009 --lnddir /app/lnd/"
+alias $short-charge="docker run -it --rm --network=lcodes-net --add-host=ln-node:172.20.0.3 --ip=$charge_ip -v lcodes-vol-charge:/app lcodes-charge --grpc=172.20.0.3:10009 --lnddir=/home/charge/.lnd/ $@"
