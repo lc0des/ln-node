@@ -103,7 +103,7 @@ function setup_charge_config {
 	docker cp $dc-lnd:/app/.lnd/data/chain/bitcoin/mainnet/$mac .
 	docker cp $dc-lnd:/app/.lnd/$cert .
 	docker cp $lnd $ret:$docker_vol_path
-	docker cp $mac $ret:$docker_vol_path
+	docker cp $mac $ret:$docker_vol_path/data/chain/bitcoin/mainnet/
 	docker cp $cert $ret:$docker_vol_path
 #	docker stop $ret
 }
