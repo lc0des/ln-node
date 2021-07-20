@@ -12,8 +12,6 @@ ENV GROUP_ID=$GROUP_ID
 RUN addgroup --gid $GROUP_ID charge
 RUN adduser --home /home/charge --uid $USER_ID --gid $GROUP_ID --disabled-login charge
 
-RUN mkdir -p $LND_DIR
-RUN chown -R $USER_ID:$GROUP_ID $LND_DIR
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
@@ -26,5 +24,8 @@ RUN chown -R charge:charge /home/charge/src
 
 WORKDIR /home/charge
 USER charge
+
+RUN mkdir -p /home/charge/.lnd
+RUN chown -R $USER_ID:$GROUP_ID /home/charge/.lnd
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
