@@ -57,6 +57,7 @@ fi
 function setup_bash_alias {
 	cd $repodir
 	cat supply/lcodes_bashrc >> $userhome/.bashrc
+	. $userhome/.bashrc
 }
 
 function setup_daemon_config {
@@ -360,12 +361,13 @@ function build_tor {
 
 	# set TOR password in LND conf
 	sed -i "s/REPLACEME_TORPASSWORD/$gen_pass/" ../lnd/lnd.conf
+	echo "TOR Control Password: $gen_pass" >> $DESCLOG
 	sleep 1
 
 	tor_bitcoind=`docker exec -ti $dc-tor cat /app/data/lcodes-bitcoind/hostname`
 	tor_lnd=`docker exec -ti $dc-tor cat /app/data/lcodes-lnd/hostname`
 	echo "Bitcoin Onion Addr: $tor_bitcoind" >> $DESCLOG
-	echo "LND Onion Addr: $tor_bitcoind" >> $DESCLOG
+	echo "LND Onion Addr: $tor_lnd" >> $DESCLOG
 
 	# subsitate placeholde with ONION Address
 	sed -i "s/REPLACEME_ONION_ADDR/$tor_bitcoind/" ../bitcoind/bitcoin.conf

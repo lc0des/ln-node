@@ -37,7 +37,7 @@ for being able to communicate with Tor LN nodes as well as supporting the P2P co
 * All dockerized and running their an own network
 
 ## Version
-* Version 0.2.1-Alpha
+* Version 0.2.3-Alpha
 
 ### Tested
 * Debian 10.10 - Working
@@ -60,7 +60,7 @@ During setup *no* wallet is created, you have to do this for yourself.
 
 ### LND
 
-During setup a wallet *is* created, the password has to be choosen manually.
+During setup a wallet *is* created, the password has to be choosen manually, you can also add a known seed.
 
 ## Passwords
 
@@ -82,7 +82,7 @@ $ wipe ln-node/data/logs/setup.log
 
 Or shred:
 ```
-$ shred ln-node/data/logs/setup.log
+$ shred -n 23 -uvz ln-node/data/logs/setup.log
 ```
 
 ## Done ✅ 
@@ -99,10 +99,10 @@ $ shred ln-node/data/logs/setup.log
 * random password rtl
 * wire Thunderhub with ln-node
 * random password thunderhub
-* add BOS
-* add Rebalance-LND
-* add charge-lnd
-* add suez
+* added BOS
+* added Rebalance-LND
+* added charge-lnd
+* added suez
 
 ## Todo 🚧
 
@@ -113,6 +113,7 @@ $ shred ln-node/data/logs/setup.log
 * server hardening links
 * config file for pre-install phase
 * several flags for custom prefs
+* take care of changing certs/macaroons if lnd is restarted/reconfigured
 
 ## ⚠ Disclaimer ⚠
 
